@@ -7,9 +7,7 @@
 
 `Prometheus scrapes metrics and fires alerts when certain thresholds are reached.`
 
-
 [Docker Flow Auto Scaling](https://monitor.dockerflow.com/auto-scaling/)
-
 
 [Container Advisor](https://github.com/google/cadvisor)
 
