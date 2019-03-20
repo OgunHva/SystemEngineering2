@@ -6,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-   <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
     <title>Hello, world!</title>
   </head>
   <body>
+
 <!--Navigation bar-->
 <div id="nav-placeholder">
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -36,14 +37,13 @@
 <h1>
 <center> <br><br>Welkom!<br><br><br> </center></h1>
 
-<div class="form-group">
+<form action="http://172.17.0.1:5000" method="POST">
+<div id="search_post">
 <b>Wat is de term waar je naar wilt zoeken?</b>
-  <input type="text" class="form-control" placeholder="Geef een zoekterm op" id="usr">
-  <button type="button" class="btn btn-success">Submit</button>
+  <input type="text" name="search_1" id="search_1" class="form-control" placeholder="Geef een zoekterm op">
+  <button type="submit" id="button1" name="knop" class="btn btn-success">Submit</button>
 </div>
-
-
-
+</form>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
