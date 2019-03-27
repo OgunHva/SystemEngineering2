@@ -13,7 +13,7 @@ counterup=$((counter+1))
 counterdown=$((counter-1))
 
 #min and max variables
-MIN="1"
+MIN="0"
 MAX="255"
 
 echo "add or remove container? write (add) or (remove)"
@@ -26,12 +26,13 @@ read count
 if [ "$count" == "add" ] && [ "$counter" != "$MAX" ]; then
 	echo $ipaddr$counterup
 	echo $counterup > var.txt
-	echo docker run -t worker$counterup dabb
+	docker run --name worker$counterup dabb
 	
 #same as above but "down"
 elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
 	echo $ipaddr$counterdown
 	echo $counterdown > var.txt
+	docker rm -f worker$counter
 else
 	echo "the IP range must be between 1 and 255"
 fi
