@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #ip address of the workers
-ipaddr="145.168.0."
+ipaddr="172.17.0."
 
 #reading the var.txt file into the variable counter
 read counter < var.txt
@@ -13,7 +13,7 @@ counterup=$((counter+1))
 counterdown=$((counter-1))
 
 #min and max variables
-MIN="0"
+MIN="1"
 MAX="255"
 
 echo "add or remove container? write (add) or (remove)"
@@ -26,7 +26,7 @@ read count
 if [ "$count" == "add" ] && [ "$counter" != "$MAX" ]; then
 	echo $ipaddr$counterup
 	echo $counterup > var.txt
-	docker run --name worker$counterup dabb
+	docker run -itd --name worker$counterup dabb
 	
 #same as above but "down"
 elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
