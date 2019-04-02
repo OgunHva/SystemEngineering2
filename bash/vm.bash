@@ -26,7 +26,7 @@ read count
 if [ "$count" == "add" ] && [ "$counter" != "$MAX" ]; then
 	echo $ipaddr$counterup
 	echo $counterup > var.txt
-	docker run -itd --name worker$counterup dabb
+	docker run -itd --name worker$counterup -v /mnt/hgfs/testFolder:/textfiles dabb
 	
 #same as above but "down"
 elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
