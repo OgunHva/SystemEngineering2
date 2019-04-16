@@ -6,10 +6,7 @@ ipaddr="172.17.0."
 #reading the var.txt file into the variable counter
 read counter < var.txt
 
-#count +1
 counterup=$((counter+1))
-
-#count -1
 counterdown=$((counter-1))
 
 #min and max variables
@@ -26,13 +23,41 @@ read count
 if [ "$count" == "add" ] && [ "$counter" != "$MAX" ]; then
 	echo $ipaddr$counterup
 	echo $counterup > var.txt
-	docker run -itd --name worker$counterup -v /mnt/hgfs/testFolder:/textfiles dabb
-	
-#same as above but "down"
+	#docker run -itd --name worker$counterup -v /mnt/hgfs/testFolder:/textfiles dabb
+	docker run -itd --name worker$counterup progrium/stress --cpu 2 --io 1 --vm 2 --vm-bytes 128M
+elif [ "$count" == "idle" ] && [ "$counter" != "$MAX" ]; then
+	echo $ipaddr$counterup
+	echo $counterup > var.txt
+	docker run -itd --name worker$counterup -v /mnt/hgfs/testFolder:/textfiles dabb	
 elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
-	echo $ipaddr$counterdown
+	echo $ipaddr$counter
 	echo $counterdown > var.txt
-	docker rm -f worker$counter
+    docker rm -f worker$counter
 else
 	echo "the IP range must be between 1 and 255"
 fi
+
+cpuperc=$(docker stats worker$counterup --no-stream --format "{\"container\":\"{{ .Container }}\",\"cpu\":\"{{ .CPUPerc }}\"}" | jq -r '.cpu')
+cpuperc=${cpuperc%????}
+#echo $cpuperc
+
+end=$((SECONDS+10))
+echo $count
+while [ $SECONDS -lt $end ]; do
+	if [ "$cpuperc" -lt "1" ] && [ $SECONDS -lt $end ]; then
+		sleep 3
+		echo "Worker state is Idle: Shutting down Worker$counter"
+		echo $counterdown > var.txt
+		echo $ipaddr$counter
+		echo $cpuperc
+		docker rm -f worker$counter			
+	elif [ "$cpuperc" -gt "50" ]; then
+		sleep 3
+		echo "This worker is performing above 50%"
+		echo "adding a new worker"
+		echo $cpuperc
+	else
+		echo "This is unexpected..."
+		sleep 1
+	fi
+done
