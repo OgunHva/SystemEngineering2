@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#ip address of the workers test
+#ip address of the workers
 ipaddr="172.17.0."
 
 #reading the var.txt file into the variable counter
