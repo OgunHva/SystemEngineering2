@@ -19,6 +19,7 @@ cpuperc=${cpuperc%????}
 
 stime="1"
 end=$((SECONDS+8))
+end2=$((SECONDS+5))
 echo $count
 while true 
 do
@@ -38,13 +39,20 @@ do
 			fi
 		done		
 	elif [ "$cpuperc" -gt 50 ]; then
-		sleep $stime
-		if [ "$SECONDS" -lt 5 ]; then
-			docker run -itd --name worker$counterup -v /mnt/hgfs/testFolder:/textfiles dabb
-		else
-			echo "Worker$counter is performing above 50%: adding a new worker..."
-			echo $cpuperc
-		fi
+		while true
+		do
+			sleep $stime
+			if [ "$SECONDS" -lt $end2 ]; then
+				echo "Worker$counter is performing above 50%: adding a new worker..."
+				echo $cpuperc
+			else
+				echo $counterup > var.txt
+				counter=$((counter+1))
+				docker run -itd --name worker$counter -v /mnt/hgfs/testFolder:/textfiles dabb
+				echo $counter
+				end2=$((SECONDS+5))
+			fi
+		done
 	else
 		echo "This is unexpected..."
 		sleep $stime
