@@ -23,15 +23,20 @@ echo $count
 while true 
 do
 	if [ "$cpuperc" -lt 1 ]; then
-		sleep $stime
-		if [[ "$SECONDS" -lt $end && "$SECONDS" -lt 1 ]]; then
-			echo $counterdown > var.txt
-			echo $ipaddr$counter
-			echo $cpuperc
-			docker rm -f worker$counter
-		else
-			echo "Worker state is Idle: Shutting down Worker$counter on $end seconds: $SECONDS"
-		fi			
+		while true
+		do
+			sleep $stime
+			if [ "$SECONDS" -lt $end ]; then
+				echo "Worker$counter state is Idle: Shutting down at $end seconds: $SECONDS"
+				echo $cpuperc
+			else
+				docker rm -f worker$counter
+				echo $counterdown > var.txt
+				counter=$((counter-1))
+				echo $counter
+				end=$((SECONDS+8))
+			fi
+		done		
 	elif [ "$cpuperc" -gt 50 ]; then
 		sleep $stime
 		if [ "$SECONDS" -lt 5 ]; then
@@ -45,3 +50,4 @@ do
 		sleep $stime
 	fi
 done
+
