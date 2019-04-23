@@ -20,7 +20,10 @@ do
 	sleep $stime
 	cpuperc=$(docker stats worker$counter --no-stream --format "{\"container\":\"{{ .Container }}\",\"cpu\":\"{{ .CPUPerc }}\"}" | jq -r '.cpu')
 	cpuperc=${cpuperc%????}
-	echo $cpuperc > mypipe
+	echo $cpuperc > cpu.txt
+	read percent < cpu.txt
+	echo "CPU: $percent"
+	echo $percent > mypipe
 done &
 
 while read line<mypipe;
