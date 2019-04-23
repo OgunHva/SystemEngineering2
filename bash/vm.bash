@@ -36,28 +36,3 @@ elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
 else
 	echo "the IP range must be between 1 and 255"
 fi
-
-cpuperc=$(docker stats worker$counterup --no-stream --format "{\"container\":\"{{ .Container }}\",\"cpu\":\"{{ .CPUPerc }}\"}" | jq -r '.cpu')
-cpuperc=${cpuperc%????}
-#echo $cpuperc
-
-end=$((SECONDS+10))
-echo $count
-while [ $SECONDS -lt $end ]; do
-	if [ "$cpuperc" -lt "1" ] && [ $SECONDS -lt $end ]; then
-		sleep 3
-		echo "Worker state is Idle: Shutting down Worker$counter"
-		echo $counterdown > var.txt
-		echo $ipaddr$counter
-		echo $cpuperc
-		docker rm -f worker$counter			
-	elif [ "$cpuperc" -gt "50" ]; then
-		sleep 3
-		echo "This worker is performing above 50%"
-		echo "adding a new worker"
-		echo $cpuperc
-	else
-		echo "This is unexpected..."
-		sleep 1
-	fi
-done
