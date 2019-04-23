@@ -38,9 +38,9 @@ for fname in os.listdir(path=search_path):
                 index = line.find(search_str)
                 if ( index != -1) :
                     print(fname, line, sep=" ")
-					list.append(fname)
-					fo.close
-					break
+                    list.append(fname)
+                    fo.close
+                    break
                 # Read next line
                 line = fo.readline()  
 
