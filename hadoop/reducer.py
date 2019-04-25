@@ -6,13 +6,13 @@ import sys
 sum = []
 
 for line in sys.stdin:
-	try:
-	    sum.append(line)
-	except ValueError:
-		continue
+    try:
+        sum.append(line)
+    except ValueError:
+        continue
 
 sum = sorted(sum)
 sum = list(set(sum))
 
 for name in sum:
-	print (name)
+    print (name)
