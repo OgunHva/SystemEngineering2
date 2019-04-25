@@ -5,7 +5,6 @@ import sys
 
 list = []
 
-search_path = "sys.stdin"
 file_type ="txt"
 search_str = os.environ["WORD_INPUT"]
 
