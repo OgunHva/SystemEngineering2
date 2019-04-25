@@ -1,3 +1,5 @@
+# Execute MapReduce with WORD_INPUT variable = poison
+`
 hadoop jar /home/hadoop/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar \
 -file /home/hadoop/test/mapperV3.py  \
 -mapper 'python mapperV3.py' \
@@ -6,3 +8,9 @@ hadoop jar /home/hadoop/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar
 -input input/* \
 -output output/ \
 -cmdenv WORD_INPUT=poison
+`
+
+# Removing output folder:
+`
+hdfs dfs -rm -r output
+`
