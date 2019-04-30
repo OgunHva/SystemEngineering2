@@ -35,6 +35,13 @@ def test():
         final = str(sum(number))
     return final
 
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  return response
+
 # IP of the host the Logger runs on(Change IP to the IP of your VM), app runs in Debug Mode
 # Don't forget to also change the IP in index.html
 if __name__ == '__main__':
