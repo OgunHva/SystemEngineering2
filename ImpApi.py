@@ -23,10 +23,17 @@ def my_form():
 def test():
     # check if request is an POST
     if request.method == 'POST':
-        zoekopdracht = request.form['search1']
-        f = os.popen("hdfs dfs -cat output1/part-r-00000 | grep " + zoekopdracht)
+        zoekopdracht = request.form['POST']
+        if os.geteuid() == 0:
+            f = os.popen("runuser -l  hadoop -c 'hdfs dfs -cat output/part-r-00000 | grep '" + zoekopdracht)
+
+        else:
+            f = os.popen('hdfs dfs -cat output/part-r-00000 | grep ' + zoekopdracht)
+
         now = f.read()
-    return now
+        number = [int(s) for s in now.split() if s.isdigit()]
+        final = str(sum(number))
+    return final
 
 # IP of the host the Logger runs on(Change IP to the IP of your VM), app runs in Debug Mode
 # Don't forget to also change the IP in index.html
