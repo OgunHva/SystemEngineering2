@@ -5,57 +5,51 @@ ipaddr="172.17.0."
 read counter < var.txt
 
 counterup=$((counter+1))
-counterdown=$((counter-1))
+counterdown=$((counter - 1))
 MIN="1"
 MAX="255"
-
-mkfifo mypipe
-
 stime="1"
 end=$((SECONDS+8))
 end2=$((SECONDS+5))
 
 while true
 do
-	sleep $stime
+	echo "this is counter: $counter"
 	cpuperc=$(docker stats worker$counter --no-stream --format "{\"container\":\"{{ .Container }}\",\"cpu\":\"{{ .CPUPerc }}\"}" | jq -r '.cpu')
 	cpuperc=${cpuperc%????}
+	sleep $stime
 	echo $cpuperc > cpu.txt
-	read percent < cpu.txt
-	echo "CPU: $percent"
-	echo $percent > mypipe
-done &
+	read cpupercc < cpu.txt
+	echo "CPUPERCCC: $cpupercc from worker$counter"
 
-while read line<mypipe;
-do
-	if [ "$line" -lt 1 ]; then
-		while true
+	if [ "$cpupercc" -lt 1 ]; then
+		while true;
 		do
-			sleep $stime
 			if [ "$SECONDS" -lt $end ]; then
 				echo "Worker$counter state is Idle: Shutting down at $end seconds: $SECONDS"
-				echo $line
+				echo "CPU IS IDLE: $cpupercc"
+				sleep $stime
 			else
 				docker rm -f worker$counter
 				echo $counterdown > var.txt
-				counter=$((counter-1))
-				echo $counter
-				end=$((SECONDS+8))
+				counter=$(($counter - 1))
+				end=$((SECONDS+10))
+				break
 			fi
-		done		
-	elif [ "$line" -gt 50 ]; then
+		done
+	elif [ "$cpupercc" -gt 50 ]; then
 		while true
 		do
-			sleep $stime
 			if [ "$SECONDS" -lt $end2 ]; then
 				echo "Worker$counter is performing above 50%: adding a new worker..."
-				echo $line
+				echo "CPU LOAD: $cpupercc"
+				sleep $stime
 			else
 				echo $counterup > var.txt
-				counter=$((counter+1))
+				counter=$(($counter+1))
 				docker run -itd --name worker$counter -v /mnt/hgfs/testFolder:/textfiles dabb
-				echo $counter
-				end2=$((SECONDS+5))
+				end2=$((SECONDS+10))
+				break
 			fi
 		done
 	else
@@ -63,4 +57,3 @@ do
 		sleep $stime
 	fi
 done
-
