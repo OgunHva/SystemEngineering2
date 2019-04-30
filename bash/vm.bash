@@ -30,9 +30,9 @@ elif [ "$count" == "idle" ] && [ "$counter" != "$MAX" ]; then
 	echo $counterup > var.txt
 	docker run -itd --name worker$counterup -v /mnt/hgfs/testFolder:/textfiles dabb	
 elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
+	docker rm -f worker$counter
 	echo $ipaddr$counter
 	echo $counterdown > var.txt
-    docker rm -f worker$counter
 else
 	echo "the IP range must be between 1 and 255"
 fi
