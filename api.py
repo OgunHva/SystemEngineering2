@@ -41,6 +41,7 @@ def test():
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    APP_ROOT = os.path.dirname(os.path/abspath(__file__))
     if request.method == 'POST':
         target = os.path.join(APP_ROOT, 'text/')
         print(target)
