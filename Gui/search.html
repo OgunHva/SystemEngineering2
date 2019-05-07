@@ -22,7 +22,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="dashboard.html">Dashboard <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="dashboard.html">Dashboard<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="search.html">Zoeken</a>
@@ -39,9 +39,9 @@
 
 <div id="search_post">
 <b>Wat is de term waar je naar wilt zoeken?</b>
-  <form id="postForm">
-    <input type="text" name="search_1" id="search_1">
-    <input type="submit" value="submit">
+  <form id="postForm" class="form-group">
+    <input type="text" class="form-control" name="search_1" id="search_1">
+    <input type="submit" class="btn btn-primary" value="Zoek">
   </form>
        <script>
 		document.getElementById('postForm').addEventListener('submit', postName);
