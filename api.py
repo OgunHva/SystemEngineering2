@@ -55,7 +55,7 @@ def upload():
             destination = '/'.join([target, filename])
             print(destination)
             file.save(destination)
-    return render_template ('/var/www/html/complete.html')
+    return render_template ('complete.html')
 
 @app.after_request 
 def after_request(response):
