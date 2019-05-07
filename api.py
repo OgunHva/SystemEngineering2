@@ -39,6 +39,23 @@ def test():
 #    return render_template('search.html', len = len(fnames), fnames = fnames)
     return render_template('result.html', aantal=aantal, fnames=fnames)
 
+@app.route('/upload', methods=['POST'])
+def upload():
+    if request.method == 'POST':
+        target = os.path.join(APP_ROOT, 'text/')
+        print(target)
+
+        if not os.path.isdir(target):
+            os.mkdir(target)
+
+        for file in request.files.getlist('file'):
+            print(file)
+            filename = file.filename
+            destination = '/'.join([target, filename])
+            print(destination)
+            file.save(destination)
+    return render_template ('/var/www/html/complete.html')
+
 @app.after_request 
 def after_request(response):
   response.headers.add('Access-Control-Allow-Origin', '*')
