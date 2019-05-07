@@ -52,9 +52,17 @@ def upload():
         for file in request.files.getlist('file'):
             print(file)
             filename = file.filename
-            destination = '/'.join([target, filename])
+            destination = (target+filename)
             print(destination)
+            destination = destination.replace(" ", '_')
             file.save(destination)
+            if os.geteuid() == 0:
+                os.popen("runuser -l  hadoop -c 'hdfs dfs -copyFromLocal '"+ destination +"' input/'")
+                #os.remove(destination)
+            else:
+                os.popen('hdfs dfs -copyFromLocal '+ destination +' input/')
+                #os.remove(destination)
+            
     return render_template ('complete.html')
 
 @app.after_request 
