@@ -3,17 +3,22 @@
   <head>
      </head>
 <body>
-Aantal bestanden waar je zoekopdracht in voorkomt:
-
-<div id="aantal">
-{{aantal}}
-</div>
-
 <br><br>
-Je zoekopdracht is gevonden in de onderstaande bestandsnamen:
 <div id="text">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Aantal</th>
+      <th scope="col">Bestandsnamen</th>    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{aantal}}</td>
+      <td>{{fnames}}</td>
+    </tr>
+  </tbody>
+</table>
 
-{{fnames}}
 
 </div> 
 </body>
