@@ -37,7 +37,7 @@ def test():
         aantal = len(fnames.split())
 #    return '{}{}'.format(fnames, aantal)
 #    return render_template('search.html', len = len(fnames), fnames = fnames)
-    return render_template('result.html', aantal=aantal, fnames=fnames)
+    return render_template('result_search.html', aantal=aantal, fnames=fnames)
 
 @app.route('/upload', methods=['POST'])
 def upload():
