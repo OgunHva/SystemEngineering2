@@ -61,9 +61,25 @@ def upload():
                 #os.remove(destination)
             else:
                 os.popen('hdfs dfs -copyFromLocal '+ destination +' input/')
-                #os.remove(destination)
-            
+                #os.remove(destination)            
     return render_template ('complete.html')
+
+# POST request
+@app.route('/dashboard', methods=['POST'])
+def dashboard():
+    if request.method =='POST':
+#        btn_showdata = request.form['data']
+        if os.geteuid() == 0:
+            s = os.popen("runuser -l hadoop -c 'hdfs dfs -count input'")
+        else:
+            s = os.popen('hdfs dfs -count input')
+        m = s.read()
+        aantal_bestanden_list = m.split()
+        aantal_bestanden = aantal_bestanden_list[1]
+        print(aantal_bestanden)
+#    return render_template('result_dashboard.html', aantal_bestanden=aantal_bestanden)
+    return render_template('result_dashboard.html', aantal_bestanden=aantal_bestanden)
+#    return aantal_bestanden
 
 @app.after_request 
 def after_request(response):
