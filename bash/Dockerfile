@@ -8,7 +8,7 @@ RUN apt-get update \
   openssh-server \
   wget
 
-#RUN useradd -ms /bin/bash hadoop
+RUN sed -i 's/PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 RUN useradd -m hadoop && echo "hadoop:hadoop" | chpasswd && adduser hadoop sudo
 USER hadoop
@@ -20,3 +20,4 @@ RUN cp -r hadoop-3.1.2 hadoop
 RUN rm -r hadoop-3.1.2
 
 CMD /bin/bash
+EXPOSE 22 50070 8020 50470
