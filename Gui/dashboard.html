@@ -38,7 +38,28 @@
 <!--end of Navigation bar-->
 <h1>
 <center> <br><br>Welkom! </center></h1>
-
+  <form id="postForm2" name="data" class="form-group">
+    <input type="submit" name="data" id="data" class="btn btn-primary" value="data">
+  </form>
+       <script>
+		document.getElementById('postForm2').addEventListener('submit', postName);
+		function postName(e){
+		  e.preventDefault();
+		  var name = document.getElementById('data').value;
+		  var params = "name="+name;
+		  var xhr = new XMLHttpRequest();
+		  xhr.open('POST', 'http://192.168.111.143:5000/dashboard', true);
+                  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		  xhr.onload = function(){
+		  console.log('READYSTATE: ', xhr.readyState);
+			  document.getElementById("text").innerHTML = this.responseText;
+		  }
+		  xhr.send(params);
+		}
+	</script> 
+<div id="text">
+</div>
+	  
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
