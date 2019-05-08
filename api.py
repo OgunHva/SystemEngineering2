@@ -62,7 +62,7 @@ def upload():
             else:
                 os.popen('hdfs dfs -copyFromLocal '+ destination +' input/')
                 #os.remove(destination)            
-    return render_template ('complete.html')
+    return render_template ('complete_upload.html')
 
 # POST request
 @app.route('/dashboard', methods=['POST'])
