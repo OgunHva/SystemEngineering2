@@ -13,6 +13,7 @@ counterdown=$((counter-1))
 MIN="1"
 MAX="254"
 tag=$( tail -n 1 /etc/hosts )
+tagW=$( tail -n 1 /home/hadoop/hadoop/etc/hadoop/workers)
 
 echo "add or remove container? write (add) or (remove)"
 
@@ -29,6 +30,7 @@ if [ "$count" == "add" ] && [ "$counter" != "$MAX" ]; then
 elif [ "$count" == "idle" ] && [ "$counter" != "$MAX" ]; then
 	if [[ $tag == *"worker"* ]]; then
 		echo -e "$ipaddr$counterup \t worker$counterup" >> /etc/hosts
+		echo "worker$counterup" >> /home/hadoop/hadoop/etc/hadoop/workers
 	else
 		echo "Do nothing"
 	fi
@@ -44,6 +46,11 @@ elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
 		sed -i '$ d' /etc/hosts
 	else
 		echo "Do nothing"
+	fi
+	if [[ $tagW != "worker1" ]]; then
+		sed -i '$ d' /home/hadoop/hadoop/etc/hadoop/workers
+	else
+		echo "Hadoopconfig: Cannot remove worker1"
 	fi
 else
 	echo "the IP range must be between 1 and 255"
