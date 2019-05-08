@@ -76,7 +76,6 @@ def dashboard():
         m = s.read()
         aantal_bestanden_list = m.split()
         aantal_bestanden = aantal_bestanden_list[1]
-        print(aantal_bestanden)
 #    return render_template('result_dashboard.html', aantal_bestanden=aantal_bestanden)
     return render_template('result_dashboard.html', aantal_bestanden=aantal_bestanden)
 #    return aantal_bestanden
