@@ -12,6 +12,7 @@ counterdown=$((counter-1))
 #min and max variables
 MIN="1"
 MAX="254"
+tag=$( tail -n 1 /etc/hosts )
 
 echo "add or remove container? write (add) or (remove)"
 
@@ -26,6 +27,11 @@ if [ "$count" == "add" ] && [ "$counter" != "$MAX" ]; then
 	#docker run -itd --name worker$counterup -v /mnt/hgfs/testFolder:/textfiles dabb
 	docker run -itd --name worker$counterup --network localnet progrium/stress --cpu 2 --io 1 --vm 2 --vm-bytes 128M
 elif [ "$count" == "idle" ] && [ "$counter" != "$MAX" ]; then
+	if [[ $tag == *"worker"* ]]; then
+		echo -e "$ipaddr$counterup \t worker$counterup" >> /etc/hosts
+	else
+		echo "Do nothing"
+	fi
 	echo $ipaddr$counterup
 	echo $counterup > var.txt
 	docker run -itd --name worker$counterup --network localnet -v /mnt/hgfs/testFolder:/textfiles dabbhadoop	
@@ -33,6 +39,12 @@ elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
 	docker rm -f worker$counter
 	echo $ipaddr$counter
 	echo $counterdown > var.txt
+	if [[ $tag == *"worker"* ]]; then
+		echo -e "Removed line in Hosts file: ipaddr$counter \t worker$counter"
+		sed -i '$ d' /etc/hosts
+	else
+		echo "Do nothing"
+	fi
 else
 	echo "the IP range must be between 1 and 255"
 fi
