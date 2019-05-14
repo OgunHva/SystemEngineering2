@@ -34,6 +34,8 @@ for search_word in words:
         var = 2
     elif search_word == "NOT":
         var = 3
+    elif search_word == "DIF":
+        var = 4
     else:
         if var == 1:
             list_add = createlist(search_word, the_lines)
@@ -45,6 +47,9 @@ for search_word in words:
         elif var == 3:
             list_sub = createlist(search_word, the_lines)
             list_full = list(set(list_full) - set(list_sub))
+        elif var == 4:
+            list_dif = createlist(search_word, the_lines)
+            list_full = list(set(list_full) ^ set(list_dif))
         else:
             list_full = createlist(search_word, the_lines)
 
