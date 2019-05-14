@@ -30,10 +30,10 @@ def test():
         subprocess.call(cmd, shell=True)
         
         if os.geteuid() == 0:
-            f = os.popen("runuser -l  hadoop -c 'hdfs dfs -cat output/part-00000 | grep '" + zoekopdracht)
+            f = os.popen("runuser -l  hadoop -c 'hdfs dfs -cat output/part-00000'")
 
         else:
-            f = os.popen('hdfs dfs -cat output/part-00000 | grep ' + zoekopdracht)
+            f = os.popen('hdfs dfs -cat output/part-00000')
         fnames = f.read()
         fnames = fnames.replace('[', '')
         fnames = fnames.replace(']', '')
