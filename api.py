@@ -2,6 +2,7 @@
 from flask import Flask, request, render_template
 import requests
 import os
+import subprocess
 from jinja2 import Template
 
 app = Flask(__name__, template_folder='/var/www/html/templates')
@@ -25,11 +26,14 @@ def test():
     # check if request is an POST
     if request.method == 'POST':
         zoekopdracht = request.form['name']
+        cmd = ["hadoop jar /home/hadoop/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar" + " \-file /home/hadoop/hduser/mapper.py" + " \-mapper 'python3 mapper.py'" + " \-file /home/hadoop/hduser/reducer.py" + " \-reducer 'python3 reducer.py'" + " \-input input/*" + " \-output output" + " \-cmdenv WORD_INPUT=" + zoekopdracht]
+        subprocess.call(cmd, shell=True)
+        
         if os.geteuid() == 0:
-            f = os.popen("runuser -l  hadoop -c 'hdfs dfs -cat output4/part-00000 | grep '" + zoekopdracht)
+            f = os.popen("runuser -l  hadoop -c 'hdfs dfs -cat output/part-00000 | grep '" + zoekopdracht)
 
         else:
-            f = os.popen('hdfs dfs -cat output4/part-00000 | grep ' + zoekopdracht)
+            f = os.popen('hdfs dfs -cat output/part-00000 | grep ' + zoekopdracht)
         fnames = f.read()
         fnames = fnames.replace('[', '')
         fnames = fnames.replace(']', '')
@@ -37,8 +41,7 @@ def test():
         fnames_split = fnames.split()
         fnames_split.sort()
         aantal = len(fnames.split())
-#    return '{}{}'.format(fnames, aantal)
-#    return render_template('search.html', len = len(fnames), fnames = fnames)
+    os.popen("hdfs dfs -rm -r output")
     return render_template('result_search.html', aantal=aantal, fnames_split=fnames_split)
 
 @app.route('/upload', methods=['POST'])
