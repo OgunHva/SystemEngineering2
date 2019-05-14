@@ -37,7 +37,7 @@ for search_word in words:
     else:
         if var == 1:
             list_add = createlist(search_word, the_lines)
-			list_full = list(set(list_full) & set(list_add))
+            list_full = list(set(list_full) & set(list_add))
         elif var == 2:
             list_dif = createlist(search_word, the_lines)
             list_full = list(set(list_full) - set(list_add))
