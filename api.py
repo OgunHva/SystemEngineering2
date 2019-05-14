@@ -26,6 +26,7 @@ def test():
     # check if request is an POST
     if request.method == 'POST':
         zoekopdracht = request.form['name']
+        zoekopdracht = zoekopdracht.replace(" ", "_")
         cmd = ["hadoop jar /home/hadoop/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar" + " \-file /home/hadoop/hduser/mapper.py" + " \-mapper 'python3 mapper.py'" + " \-file /home/hadoop/hduser/reducer.py" + " \-reducer 'python3 reducer.py'" + " \-input input/*" + " \-output output" + " \-cmdenv WORD_INPUT=" + zoekopdracht]
         subprocess.call(cmd, shell=True)
         
