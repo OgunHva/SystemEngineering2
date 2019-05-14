@@ -38,15 +38,15 @@ for search_word in words:
         var = 4
     else:
         if var == 1:
-            list_add = createlist(search_word, the_lines)
-            list_full = list(set(list_full) & set(list_add))
+            list_and = createlist(search_word, the_lines)
+            list_full = list(set(list_full) & set(list_and))
         elif var == 2:
-            list_dif = createlist(search_word, the_lines)
-            list_full = list(set(list_full) - set(list_add))
-            list_full = list_full + list_add
+            list_or = createlist(search_word, the_lines)
+            list_full = list(set(list_full) - set(list_or))
+            list_full = list_full + list_or
         elif var == 3:
-            list_sub = createlist(search_word, the_lines)
-            list_full = list(set(list_full) - set(list_sub))
+            list_not = createlist(search_word, the_lines)
+            list_full = list(set(list_full) - set(list_not))
         elif var == 4:
             list_dif = createlist(search_word, the_lines)
             list_full = list(set(list_full) ^ set(list_dif))
