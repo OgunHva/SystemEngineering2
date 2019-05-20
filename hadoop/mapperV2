@@ -1,0 +1,23 @@
+ #!/usr/bin/env python
+
+from operator import itemgetter
+import sys
+
+sum = {}
+
+for line in sys.stdin:
+    try:
+        line = line.strip()
+        split_line = line.split()
+        if split_line[0] in sum:
+            index = sum.get(split_line[0])
+            found = index.find(split_line[1])
+            if (found == -1):
+                sum[split_line[0]] = sum[split_line[0]] + split_line[1]
+        else:
+            sum[split_line[0]] = split_line[1]
+    except ValueError:
+        continue
+
+for y in sum:
+    print(y + ": " + sum[y])
