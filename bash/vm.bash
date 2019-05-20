@@ -42,7 +42,7 @@ elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
 	docker rm -f worker$counter
 	echo "IP Address: $ipaddr$counter"
 	echo $counterdown > var.txt
-	ssh-keygen -f "/root/.ssh/known_hosts" -R worker$counter
+	ssh-keygen -f "/home/hadoop/.ssh/known_hosts" -R worker$counter
 	if [[ $tag == *"worker"* ]]; then
 		echo -e "Removed line in Hosts file: ipaddr$counter \t worker$counter"
 		sed -i '$ d' /etc/hosts

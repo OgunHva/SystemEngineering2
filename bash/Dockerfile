@@ -6,7 +6,8 @@ RUN apt-get update \
   sudo \
   default-jdk \
   openssh-server \
-  wget
+  wget \
+  python3
 
 ARG SSH_PRIVATE_KEY
 ARG SSH_PUBLIC_KEY
@@ -36,5 +37,6 @@ RUN rm -r hadoop-3.1.2
 RUN mkdir /home/hadoop/hadoop/logs
 RUN chown -R hadoop /home/hadoop/hadoop
 
+#ENTRYPOINT ["/bin/sh", "/home/hadoop/hadoop/sbin/hadoop-daemon.sh start datanode"]
 CMD ["/usr/sbin/sshd", "-D"]
 EXPOSE 22
