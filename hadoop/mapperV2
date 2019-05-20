@@ -1,23 +1,32 @@
- #!/usr/bin/env python
+#!/usr/bin/env python
 
-from operator import itemgetter
+import os
 import sys
 
-sum = {}
+dict = {}
+
+
+def letters(input):
+    valids = ""
+    for character in input:
+        if character.isalpha() or character == " ":
+            valids += character
+    return valids
 
 for line in sys.stdin:
-    try:
-        line = line.strip()
-        split_line = line.split()
-        if split_line[0] in sum:
-            index = sum.get(split_line[0])
-            found = index.find(split_line[1])
+    line = line.strip()
+    line = line.lower()
+    line = letters(line)
+    line_split = line.split()
+    filepath = os.environ["map_input_file"]
+    file_name = os.path.split(filepath)[-1]
+    for word in line_split:
+        if word in dict:
+            index = dict.get(word)
+            found = index.find(file_name)
             if (found == -1):
-                sum[split_line[0]] = sum[split_line[0]] + split_line[1]
+                dict[word] = dict[word] + " " + file_name
         else:
-            sum[split_line[0]] = split_line[1]
-    except ValueError:
-        continue
-
-for y in sum:
-    print(y + ": " + sum[y])
+            dict[word] = file_name
+for y in dict:
+    print(y + " " + dict[y])
