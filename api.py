@@ -77,13 +77,16 @@ def dashboard():
 #        btn_showdata = request.form['data']
         if os.geteuid() == 0:
             s = os.popen("runuser -l hadoop -c 'hdfs dfs -count input'")
+            l = os.popen("runuser -l hadoop -c 'hdfs dfsadmin -report | grep Live'")
         else:
             s = os.popen('hdfs dfs -count input')
+            l = os.popen('hdfs dfsadmin -report | grep Live')
         m = s.read()
+        live_nodes = l.read()
         aantal_bestanden_list = m.split()
         aantal_bestanden = aantal_bestanden_list[1]
 #    return render_template('result_dashboard.html', aantal_bestanden=aantal_bestanden)
-    return render_template('result_dashboard.html', aantal_bestanden=aantal_bestanden)
+    return render_template('result_dashboard.html', aantal_bestanden=aantal_bestanden, live_nodes=live_nodes)
 #    return aantal_bestanden
 
 @app.after_request 
