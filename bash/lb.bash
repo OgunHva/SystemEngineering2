@@ -1,13 +1,13 @@
 #!/bin/bash
 
-ipaddr="172.17.0."
+ipaddr="145.168.0."
 
 read counter < var.txt
 
 counterup=$((counter+1))
 counterdown=$((counter - 1))
 MIN="1"
-MAX="255"
+MAX="254"
 stime="1"
 end=$((SECONDS+8))
 end2=$((SECONDS+5))
@@ -22,7 +22,7 @@ do
 	read cpupercc < cpu.txt
 	echo "CPUPERCCC: $cpupercc from worker$counter"
 
-	if [ "$cpupercc" -lt 1 ]; then
+	if [ "$cpupercc" -lt 1 ] && [ "$counter" != "$MIN" ]; then
 		while true;
 		do
 			if [ "$SECONDS" -lt $end ]; then
@@ -37,7 +37,7 @@ do
 				break
 			fi
 		done
-	elif [ "$cpupercc" -gt 50 ]; then
+	elif [ "$cpupercc" -gt 50 ] && [ "$counter" != "$MAX" ]; then
 		while true
 		do
 			if [ "$SECONDS" -lt $end2 ]; then
@@ -52,6 +52,10 @@ do
 				break
 			fi
 		done
+	elif [ "$counter" == "$MIN" ]; then
+		echo $counterup > var.txt
+		counter=$(($counter+1))
+		docker run -itd --name worker$counter -v /mnt/hgfs/testFolder:/textfiles dabb
 	else
 		echo "This is unexpected..."
 		sleep $stime
