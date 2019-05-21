@@ -27,7 +27,6 @@ do
 	if [ "$cpupercc" -lt 1 ] && [ "$counter" != "$MIN" ]; then
 		while true;
 		do
-			echo "end: $end"
 			if [ "$SECONDS" -lt $end ]; then
 				echo "Worker$counter state is Idle: Shutting down at $end seconds: $SECONDS"
 				echo "CPU IS IDLE: $cpupercc"
@@ -46,14 +45,13 @@ do
 				fi
 				echo $counterdown > var.txt
 				counter=$(($counter - 1))
-				end=$((SECONDS+120))
+				end=$((SECONDS+20))
 				break
 			fi
 		done
 	elif [ "$cpupercc" -gt 50 ] && [ "$counter" != "$MAX" ]; then
 		while true
 		do
-			echo "end2: $end2"
 			if [ "$SECONDS" -lt $end ]; then
 				echo "Worker$counter is performing above 50%: adding a new worker..."
 				echo "CPU LOAD: $cpupercc"
@@ -63,8 +61,9 @@ do
 				counter=$(($counter+1))
 				docker run -itd --name worker$counterup --hostname worker$counterup --add-host node-master:172.16.45.151 --network localnet -v /home/hadoop/hadoop/etc/hadoop:/home/hadoop/hadoop/etc/hadoop dabbhadoop
 				sshpass -f password.txt ssh-copy-id -i /home/hadoop/.ssh/id_rsa.pub hadoop@worker$counterup
-				start-dfs.sh
-				end=$((SECONDS+10))
+				#ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hadoop@worker$counterup '/home/hadoop/hadoop/sbin/hadoop-daemon.sh start datanode'
+				#hdfs balancer
+				end=$((SECONDS+20))
 				break
 			fi
 		done
