@@ -29,26 +29,26 @@ if [ "$count" == "add" ] && [ "$counter" != "$MAX" ]; then
 	docker run -itd --name worker$counterup --network localnet progrium/stress --cpu 2 --io 1 --vm 2 --vm-bytes 128M
 elif [ "$count" == "idle" ] && [ "$counter" != "$MAX" ]; then
 	if [[ $tag == *"worker"* ]]; then
-		echo -e "$ipaddr$counterup \t worker$counterup" >> /etc/hosts
+		#echo -e "$ipaddr$counterup \t worker$counterup" >> /etc/hosts
 		echo "worker$counterup" >> /home/hadoop/hadoop/etc/hadoop/workers
 	else
 		echo "Do nothing"
 	fi
 	echo "IP Address: $ipaddr$counterup"
 	echo $counterup > var.txt
-	docker run -itd --name worker$counterup --hostname worker$counterup --add-host node-master:172.16.45.151 --network localnet -v /home/hadoop/hadoop/etc/hadoop:/home/hadoop/hadoop/etc/hadoop dabbhadoop
+	docker run -itd --name worker$counterup --hostname worker$counterup --add-host node-master:172.16.45.155 --network localnet -v /home/hadoop/hadoop/etc/hadoop:/home/hadoop/hadoop/etc/hadoop dabbhadoop
 	sshpass -f password.txt ssh-copy-id -i /home/hadoop/.ssh/id_rsa.pub hadoop@worker$counterup	
 elif [ "$count" == "remove" ] && [ "$counter" != "$MIN" ]; then
 	docker rm -f worker$counter
 	echo "IP Address: $ipaddr$counter"
 	echo $counterdown > var.txt
 	ssh-keygen -f "/home/hadoop/.ssh/known_hosts" -R worker$counter
-	if [[ $tag == *"worker"* ]]; then
-		echo -e "Removed line in Hosts file: ipaddr$counter \t worker$counter"
-		sed -i '$ d' /etc/hosts
-	else
-		echo "Do nothing"
-	fi
+	#if [[ $tag == *"worker"* ]]; then
+	#	echo -e "Removed line in Hosts file: ipaddr$counter \t worker$counter"
+	#	sed -i '$ d' /etc/hosts
+	#else
+	#	echo "Do nothing"
+	#fi
 	if [[ $tagW != "worker1" ]]; then
 		sed -i '$ d' /home/hadoop/hadoop/etc/hadoop/workers
 	else

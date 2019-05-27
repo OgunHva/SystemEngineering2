@@ -9,10 +9,10 @@ counterdown=$((counter - 1))
 MIN="2"
 MAX="254"
 stime="1"
-end=$((SECONDS+20))
+end=$((SECONDS+300))
 end2=$((SECONDS+20))
-tag=$( tail -n 1 /etc/hosts )
-
+#tag=$( tail -n 1 /etc/hosts )
+loop=false
 
 while true
 do
@@ -25,45 +25,48 @@ do
 	read cpupercc < cpu.txt
 	echo "CPUPERCCC: $cpupercc from worker$counter"
 	if [ "$cpupercc" -lt 1 ] && [ "$counter" != "$MIN" ]; then
-		while true;
+		while true;	
 		do
 			if [ "$SECONDS" -lt $end ]; then
 				echo "Worker$counter state is Idle: Shutting down at $end seconds: $SECONDS"
 				echo "CPU IS IDLE: $cpupercc"
 				sleep $stime
 			else
+				ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hadoop@worker$counter '/home/hadoop/hadoop/sbin/hadoop-daemon.sh stop datanode'
+				sleep $stime
 				docker rm -f worker$counter
 				ssh-keygen -f "/home/hadoop/.ssh/known_hosts" -R worker$counter
 				echo "tagW: $tagW"
 				if [[ $tagW == "worker$counter" ]]; then
 					sed -i '$ d' /home/hadoop/hadoop/etc/hadoop/workers
-					echo "testingggggg: worker$counter"
-				elif [[ $tagW == "worker2" ]]; then
-					echo "EMINEEEEEEEEE"
+					echo "hadoopworker: worker$counter"
 				else
 					echo "Hadoopconfig: Cannot remove worker2"
 				fi
 				echo $counterdown > var.txt
 				counter=$(($counter - 1))
-				end=$((SECONDS+20))
+				end=$((SECONDS+300))
 				break
 			fi
 		done
 	elif [ "$cpupercc" -gt 50 ] && [ "$counter" != "$MAX" ]; then
-		while true
+		while true;
 		do
-			if [ "$SECONDS" -lt $end ]; then
+			if [ "$SECONDS" -lt $end2 ]; then
 				echo "Worker$counter is performing above 50%: adding a new worker..."
 				echo "CPU LOAD: $cpupercc"
 				sleep $stime
+				break
 			else
 				echo $counterup > var.txt
 				counter=$(($counter+1))
-				docker run -itd --name worker$counterup --hostname worker$counterup --add-host node-master:172.16.45.151 --network localnet -v /home/hadoop/hadoop/etc/hadoop:/home/hadoop/hadoop/etc/hadoop dabbhadoop
-				sshpass -f password.txt ssh-copy-id -i /home/hadoop/.ssh/id_rsa.pub hadoop@worker$counterup
-				#ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hadoop@worker$counterup '/home/hadoop/hadoop/sbin/hadoop-daemon.sh start datanode'
-				#hdfs balancer
-				end=$((SECONDS+20))
+				docker run -itd --name worker$counter --hostname worker$counter --add-host node-master:172.16.45.155 --network localnet -v /home/hadoop/hadoop/etc/hadoop:/home/hadoop/hadoop/etc/hadoop dabbhadoop
+				sleep 2
+				sshpass -v -f password.txt ssh-copy-id -o StrictHostKeyChecking=no -i /home/hadoop/.ssh/id_rsa.pub hadoop@worker$counter
+				sleep 2
+				ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hadoop@worker$counter '/home/hadoop/hadoop/sbin/hadoop-daemon.sh start datanode'
+				ssh -o UserKnownHostsfile=/dev/null -o StrictHostKeyChecking=no hadoop@node-master '/home/hadoop/hadoop/sbin/hadoop-daemon.sh start balancer'
+				end2=$((SECONDS+10))
 				break
 			fi
 		done
