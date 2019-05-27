@@ -125,7 +125,7 @@ def upload():
                 print("Output already removed")
         cmd3 = ["hadoop jar /home/hadoop/hadoop/share/hadoop/tools/lib/hadoop-streaming-3.1.2.jar -file /home/hadoop/test/mapperV5.py  -mapper 'python mapperV5.py' -file /home/hadoop/test/reducerV5.py -reducer 'python reducerV5.py' -input input/* -output output/"]
         subprocess.Popen(cmd3, shell=True)
-    return render_template('complete_upload.html', uitkomst="Upload successful!!" sub="Please wait a minute befor searching as we process your added text file(s)")
+    return render_template('complete_upload.html', uitkomst="Upload successful!!", sub="Please wait a minute befor searching as we process your added text file(s)")
     
 
 # POST request
